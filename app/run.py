@@ -19,6 +19,9 @@ from sklearn.base import BaseEstimator, TransformerMixin
 app = Flask(__name__)
 
 def tokenize(text):
+    """
+    Tokenizing and lemmatizing, made available for the pickled model
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -30,6 +33,9 @@ def tokenize(text):
     return clean_tokens
 
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
+    """
+    Retrieve whether or not a message starts with a verb, made available for the pickled model
+    """
 
     def starting_verb(self, text):
         sentence_list = nltk.sent_tokenize(text)
@@ -48,6 +54,9 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X_tagged.astype(float))
 
 class MessageLengthExtractor(BaseEstimator, TransformerMixin):
+    """
+    Retrieve the length of the message, made available for the pickled model
+    """
     def message_length(self, messages):
         for message in messages:
             return len(message)
@@ -109,7 +118,9 @@ category_lengths_names = list(category_lengths.index)
 @app.route('/')
 @app.route('/index')
 def index():
-    
+    """
+    Creates graphs to be made availble as variables to the html template
+    """
 
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -181,6 +192,9 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    """
+    Defines the routing for the message query action, and which variables will be passed on to the template.
+    """
     # save user input in query
     query = request.args.get('query', '') 
 
@@ -197,6 +211,9 @@ def go():
 
 
 def main():
+    """
+    Hosts the flask application at the defined values below.
+    """
     app.run(host='0.0.0.0', port=3001, debug=True)
 
 

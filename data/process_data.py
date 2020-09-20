@@ -4,6 +4,9 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """
+    Read in the two csvs to be cleaned, joined, and saved as a database
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = messages.merge(categories, on=('id'))
@@ -11,6 +14,9 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """
+    Clean the category data, and expand the categories into their own columns, with binary outputs
+    """
     categories = df['categories'].str.split(';', expand=True)
     
     # select the first row of the categories dataframe
@@ -35,16 +41,25 @@ def clean_data(df):
     
     # concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df, categories], axis=1)
+
+    # Impute inconsistent value
+    df['related'].replace(2, 1, inplace=True)
     
     return df
 
 
 def save_data(df, database_filename):
+    """
+    Save the data as an sqlite database, at a specific path
+    """
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql('disaster-messages', engine, index=False) 
+    df.to_sql('disaster-messages', engine, index=False, if_exists='replace') 
 
 
 def main():
+    """
+    Read in two csvs, and manipulate the data into something workable, by cleaning, and then saving as a database.
+    """
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]

@@ -1,7 +1,26 @@
 # Disaster Response Pipeline
 
 ## Introduction
-The idea for this project is to leverage data from a disaster pipeline, preprocess it, store it into a database, create a predictive model, and demonstrate those predictions in a flask app.
+The idea for this project is to leverage data from a disaster pipeline, preprocess it, store it into a database, create a predictive model, and demonstrate those predictions in a flask app. These predictions are based on real messages that were sent during disaster events from [Figure Eight](https://appen.com/). The idea here is to create a practical predictive model, that could be used to help people.
+
+## File Structure
+* app
+	* | - template
+	* | |- master.html # main page of web app
+	* | |- go.html # classification result page of web app
+	* |- run.py # Flask file that runs app
+
+* data
+	* |- disaster_categories.csv # data to process
+	* |- disaster_messages.csv # data to process
+	* |- process_data.py
+	* |- InsertDatabaseName.db # database to save clean data to
+
+* models
+	* |- train_classifier.py
+	* |- classifier.pkl # saved model
+
+README.md
 
 ## ETL (Extract, Transform, and Load)
 ### Overview

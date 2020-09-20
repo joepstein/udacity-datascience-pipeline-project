@@ -25,6 +25,9 @@ import pickle
 
 
 def load_data(database_filepath):
+    """
+    Retrieve the data for the model, from the specified location
+    """
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql_table('disaster-messages', engine)
     X = df.message.values
@@ -34,6 +37,9 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    Leverage NLTK for tokenization. Unify the words over the lemmatized version of the word as well.
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -46,6 +52,10 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Create a pipeline to train the model on classification of the messages.
+    Engineer features such as StartingVerbExtractor, and MessageLengthExtractor
+    """
     class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
         def starting_verb(self, text):
@@ -107,6 +117,9 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Evaluate the model on each category, and output the results
+    """
     y_pred = model.predict(X_test)
 
     for index, column in enumerate(y_test):
@@ -115,10 +128,17 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """
+    Pickle the model for reuse in the flask app
+    """
     pickle.dump(model, open(model_filepath, 'wb'))
 
 
 def main():
+    """
+    Load the database, and pipe the data through different functions to test classification
+    The model must then be stored for the flask app.
+    """
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
